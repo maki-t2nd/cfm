@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>カスタムフィールドメーカー</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="google-code-prettify/prettify.css" />
+<style type="text/css">
+
+body {
+	padding-top: 20px;
+}
+
+#codearea pre {
+	display: none;
+}
+
+.controls-inner {
+	margin-bottom: 10px;
+}
+
+</style>
+<script id="textForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+</script>
+<script id="selectForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">option要素</label>
+			<div class="controls">
+				<div class="controls-inner">
+					<div class="input-prepend">
+						<span class="add-on">label</span><input type="text" name="option_label" class="span2" />
+					</div>
+					<div class="input-prepend">
+						<span class="add-on">value</span><input type="text" name="option_value" class="span2" />
+					</div>
+					<button class="delBtn btn">削除</button>
+				</div>
+				<button class="addBtn btn">追加</button>
+			</div>
+			
+		</div>
+</script>
+<script id="radioForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">input要素</label>
+			<div class="controls">
+				<div class="controls-inner">
+					<div class="input-prepend">
+						<span class="add-on">label</span><input type="text" name="radio_label" class="span2" />
+					</div>
+					<div class="input-prepend">
+						<span class="add-on">value</span><input type="text" name="radio_value" class="span2" />
+					</div>
+					<button class="delBtn btn">削除</button>
+				</div>
+				<button class="addBtn btn">追加</button>
+			</div>
+		</div>
+</script>
+<script id="checkboxForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">input要素</label>
+			<div class="controls">
+				<div class="controls-inner">
+					<div class="input-prepend">
+						<span class="add-on">label</span><input type="text" name="checkbox_label" class="span2" />
+					</div>
+					<div class="input-prepend">
+						<span class="add-on">value</span><input type="text" name="checkbox_value" class="span2" />
+					</div>
+					<button class="delBtn btn">削除</button>
+				</div>
+				<button class="addBtn btn">追加</button>
+			</div>
+		</div>
+</script>
+<script id="textareaForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+</script>
+<script id="imageForm" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">サイズ指定</label>
+			<div class="controls">
+				<select name="direction" class="span2">
+					<option value="size">size</option>
+					<option value="width">width</option>
+					<option value="height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="size" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">alt表示</label>
+			<div class="controls">
+				<input type="checkbox" name="alt" value="true" /> する
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">tiny生成</label>
+			<div class="controls">
+				<select name="tiny" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="tinySize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">large生成</label>
+			<div class="controls">
+				<select name="large" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="largeSize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">square生成</label>
+			<div class="controls">
+				<select name="square" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="squareSize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+</script>
+<script id="image2Form" type="text/x-template">
+		<div class="control-group">
+			<label class="control-label">タイトル</label>
+			<div class="controls">
+				<input type="text" name="title" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">group名</label>
+			<div class="controls">
+				<input type="text" name="group" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">name要素</label>
+			<div class="controls">
+				<input type="text" name="name" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">サイズ指定</label>
+			<div class="controls">
+				<select name="direction" class="span2">
+					<option value="">しない</option>
+					<option value="size">size</option>
+					<option value="width">width</option>
+					<option value="height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="size" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">alt表示</label>
+			<div class="controls">
+				<input type="checkbox" name="alt" value="する" /> する
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">tiny生成</label>
+			<div class="controls">
+				<select name="tiny" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="tinySize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">large生成</label>
+			<div class="controls">
+				<select name="large" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="largeSize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">square生成</label>
+			<div class="controls">
+				<select name="square" class="span2">
+					<option value="">つくらない</option>
+					<option value="Width">width</option>
+					<option value="Height">height</option>
+				</select>
+				<div class="input-append">
+					<input type="text" name="squareSize" class="span1" /><span class="add-on">px</span>
+				</div>
+			</div>
+		</div>
+</script>
+<script id="text" type="text/x-template"><tr>
+	<th>{#title}</th>
+	<td>
+		<input type="text" name="{#name}" value="{{#name}}" />
+		<input type="hidden" name="field[]" value="{#name}" />
+	</td>
+</tr>
+</script>
+<script id="select" type="text/x-template"><tr>
+	<th>{#title}</th>
+	<td>
+		<select name="{#name}">
+			<option value=""></option><!-- BEGIN option:loop -->
+			<option value="{#option_value}"{{#name}:selected#{#option_value}}>{#option_label}</option><!-- END option:loop -->
+		</select>
+		<input type="hidden" name="field[]" value="{#name}" />
+	</td>
+</tr>
+</script>
+<script id="radio" type="text/x-template"><tr>
+	<th>{#title}</th>
+	<td><!-- BEGIN radio:loop -->
+		<label for="input-{#name}-{#radio_value}"><input type="radio" name="{#name}" value="{#radio_value}" id="input-{#name}-{#radio_value}"{{#name}:checked#{#radio_value}} />{#radio_label}</label><!-- END radio:loop -->
+		<input type="hidden" name="field[]" value="{#name}" />
+	</td>
+</tr>
+</script>
+<script id="checkbox" type="text/x-template"><tr>
+	<th>{#title}</th>
+	<td><!-- BEGIN checkbox:loop -->
+		<label for="input-{#name}-{#radio_value}"><input type="checkbox" name="{#name}[]" value="{#checkbox_value}" id="input-{#name}-{#checkbox_value}"{{#name}:checked#{#checkbox_value}} />{#checkbox_label}</label><!-- END checkbox:loop -->
+		<input type="hidden" name="field[]" value="{#name}" />
+	</td>
+</tr>
+</script>
+<script id="textarea" type="text/x-template"><tr>
+	<th>{#title}</th>
+	<td>
+		<textarea name="{#name}">{{#name}}</textarea>
+		<input type="hidden" name="field[]" value="{#name}" />
+	</td>
+</tr>
+</script>
+<script id="image" type="text/x-template">
+	<tr>
+		<th>{#title}</th>
+		<td>
+			<!-- BEGIN {#name}@path:veil -->
+				<img src="%{ARCHIVES_DIR}{{#name}@path}" />
+				<input type="hidden" name="{#name}@old" value="{{#name}@path}" /><br />
+				<label>
+					<input type="checkbox" name="{#name}@edit" value="delete" />削除
+				</label>
+			<!-- END {#name}@path:veil -->
+			<input type="file" name="{#name}" size="20" /><!-- BEGIN alt:veil --><br />
+			代替テキスト:<input type="text" name="{#name}@alt" value="{{#name}@alt}" size="40" /><!-- END alt:veil -->
+			<input type="hidden" name="field[]" value="{#name}" />
+			<input type="hidden" name="{#name}:extension" value="image" />
+			<input type="hidden" name="{#name}@{#direction}" value="{#size}" /><!-- BEGIN tiny:veil -->
+			<input type="hidden" name="{#name}@tiny{#tiny}" value="{#tinySize}" /><!-- END tiny:veil --><!-- BEGIN large:veil -->
+			<input type="hidden" name="{#name}@large{#large}" value="{#largeSize}" /><!-- END large:veil --><!-- BEGIN square:veil -->
+			<input type="hidden" name="{#name}@square{#square}" value="{#squareSize}" /><!-- END square:veil -->
+			<input type="hidden" name="{#name}@filename" value="" />
+		</td>
+	</tr>
+</script>
+<script id="image2" type="text/x-template"><table class="js-fieldgroup-sortable">
+	<thead>
+	<tr>
+		<th colspan="3">{#title}</th>
+	</tr>
+	</thead>
+	<!-- BEGIN {#group}:loop -->
+	<tr class="sortable-item">
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
+		<td>
+			<!-- BEGIN {#name}:veil -->
+			<img src="%{ARCHIVES_DIR}{{#name}@path}" width="170" />
+			<label><input type="checkbox" name="{#name}@edit[{i}]" value="delete" /> 削除</label>
+			<input type="hidden" name="{#name}@old[{i}]" value="{{#name}@path}" /> 
+			<!-- END {#name}:veil -->
+			<input type="file" name="{#name}[{i}]" /><!-- BEGIN alt:veil --><br />
+			代替テキスト:<input type="text" name="{#name}@alt[{i}]" value="{{#name}@alt}" size="40" /><!-- END alt:veil --><!-- BEGIN direction:veil -->
+			<input type="hidden" name="{#name}@{#direction}[{i}]" value="{#size}" /><!-- END direction:veil --><!-- BEGIN tiny:veil -->
+			<input type="hidden" name="{#name}@tiny{#tiny}[{i}]" value="{#tinySize}" /><!-- END tiny:veil --><!-- BEGIN large:veil -->
+			<input type="hidden" name="{#name}@large{#large}[{i}]" value="{#largeSize}" /><!-- END large:veil --><!-- BEGIN square:veil -->
+			<input type="hidden" name="{#name}@square{#square}[{i}]" value="{#squareSize}" /><!-- END square:veil -->
+			
+		</td>
+		<td><input type="button" class="item-delete" value="削除" /></td>
+	</tr>
+	<!-- END {#group}:loop -->
+	<tr class="sortable-item item-template">
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
+		<td>
+			<input type="file" name="{#name}[]" /><!-- BEGIN alt:veil --><br />
+			代替テキスト:<input type="text" name="{#name}@alt[]" size="40" /><!-- END alt:veil --><!-- BEGIN direction:veil -->
+			<input type="hidden" name="{#name}@{#direction}[]" value="{#size}" /><!-- END direction:veil --><!-- BEGIN tiny:veil -->
+			<input type="hidden" name="{#name}@tiny{#tiny}[]" value="{#tinySize}" /><!-- END tiny:veil --><!-- BEGIN large:veil -->
+			<input type="hidden" name="{#name}@large{#large}[]" value="{#largeSize}" /><!-- END large:veil --><!-- BEGIN square:veil -->
+			<input type="hidden" name="{#name}@square{#square}[]" value="{#squareSize}" /><!-- END square:veil -->
+		</td>
+		<td><input type="button" class="item-delete" value="削除" /></td>
+	</tr>
+	<tfoot>
+	<tr>
+		<td colspan="3"><input type="button" class="item-insert" value="追加" /></td>
+	</tr>
+	</tfoot>
+</table>
+<input type="hidden" name="{#name}:extension" value="image" /><!-- BEGIN square:veil -->
+<input type="hidden" name="@{#group}[]" value="{#name}@squarePath" />
+<input type="hidden" name="@{#group}[]" value="{#name}@squareAlt" />
+<input type="hidden" name="@{#group}[]" value="{#name}@squareX" />
+<input type="hidden" name="@{#group}[]" value="{#name}@squareY" /><!-- END square:veil --><!-- BEGIN large:veil -->
+<input type="hidden" name="@{#group}[]" value="{#name}@largePath" />
+<input type="hidden" name="@{#group}[]" value="{#name}@largeAlt" />
+<input type="hidden" name="@{#group}[]" value="{#name}@largeX" />
+<input type="hidden" name="@{#group}[]" value="{#name}@largeY" /><!-- END large:veil --><!-- BEGIN tiny:veil -->
+<input type="hidden" name="@{#group}[]" value="{#name}@tinyPath" />
+<input type="hidden" name="@{#group}[]" value="{#name}@tinyAlt" />
+<input type="hidden" name="@{#group}[]" value="{#name}@tinyX" />
+<input type="hidden" name="@{#group}[]" value="{#name}@tinyY" /><!-- END tiny:veil --><!-- BEGIN alt:veil -->
+<input type="hidden" name="@{#group}[]" value="{#name}@alt" /><!-- END alt:veil -->
+<input type="hidden" name="@{#group}[]" value="{#name}@path" />
+<input type="hidden" name="@{#group}[]" value="{#name}@x" />
+<input type="hidden" name="@{#group}[]" value="{#name}@y" />
+<input type="hidden" name="@{#group}[]" value="{#name}@edit" />
+<input type="hidden" name="@{#group}[]" value="{#name}@old" />
+<input type="hidden" name="field[]" value="{#name}" />
+<input type="hidden" name="field[]" value="@{#group}" />
+</script>
+</head>
+<body>
+<div class="container">
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<h1><a href="#" class="brand">カスタムフィールドメーカー</a></h1>
+			</div>
+		</div>
+	</div>
+
+	<form action="" method="post" id="form" class="form-horizontal">
+	
+		<div class="control-group">
+			<label class="control-label">type</label>
+			<div class="controls">
+				<select id="typeSelect" name="type" class="span2">
+					<option value=""></option>
+					<option value="text">テキスト</option>
+					<option value="select">セレクト</option>
+					<option value="radio">ラジオ</option>
+					<option value="checkbox">チェックボックス</option>
+					<option value="textarea">テキストエリア</option>
+					<option value="image">画像</option>
+					<option value="image2">画像グループ</option>
+				</select>
+			</div>
+		</div>
+		
+		<div id="formTmp"></div>
+		
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" id="submit" value="生成" class="btn btn-primary" />
+				<input type="reset" id="clear" value="クリア" class="btn" />
+			</div>
+		</div>
+	</form>
+	
+	<div id="codearea">
+		<pre class="prettyprint lang-html linenums"></pre>
+	</div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="google-code-prettify/prettify.js"></script>
+<script src="js/customFieldMaker.js"></script>
+</body>
+</html>
