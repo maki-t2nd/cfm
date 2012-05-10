@@ -1,4 +1,4 @@
-var $type, $formTmp, $canvas, $form, $submitBtn, $clearBtn, $clearDataBtn;
+var $type, $formTmp, $canvas, $form, $submitBtn, $clearBtn, $clearDataBtn; 
 
 var setData = function(key,value){
 	localStorage.setItem(key, value);
