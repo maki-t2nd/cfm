@@ -1,8 +1,20 @@
-var $type, $formTmp, $canvas, $form, $submitBtn, $clearBtn;
+var $type, $formTmp, $canvas, $form, $submitBtn, $clearBtn, $clearDataBtn;
+
+var setData = function(key,value){
+	localStorage.setItem(key, value);
+}
+
+var getData = function(key){
+	return localStorage.getItem(key) || '';
+}
+
+var removeData = function(key){
+	localStorage.removeItem(key);
+}
 
 //フォームテンプレート取得
 var addForm = function(){
-	clearSrc();
+	//clearSrc();
 	var tmpID = this.value;
 	var formTmp = (!tmpID) ? '' : document.getElementById(tmpID+'Form').text ;
 	$formTmp.innerHTML = formTmp;
@@ -33,7 +45,7 @@ var delElem = function(e,elem){
 	e.preventDefault();
 }
 
-var addItem = function(data,tmpType) {
+var createTmp = function(data,tmpType) {
 	// テンプレート取得
 	var template = document.getElementById(tmpType).text;
 	
@@ -69,13 +81,21 @@ var addItem = function(data,tmpType) {
 		return reTmp;
 	});
 	
-	var html = template.replace(/{#(\w+)}/g, function(m, key) {
+	var newHtml = template.replace(/{#(\w+)}/g, function(m, key) {
 		var text = data[key] || '';
 		return text;
 	});
 	
-	// 画面に追加
-	html = document.createTextNode(html);
+	var defHtml = getData('cfm@defHtml');
+	newHtml = defHtml + newHtml;
+	setData('cfm@defHtml',newHtml);
+	
+	addItem(newHtml);
+}
+
+// 画面に追加
+var addItem = function(html) {
+	var html = document.createTextNode(html);
 	$canvas[0].appendChild(html);
 	$canvas[0].style.display = 'block';
 	prettyPrint();
@@ -112,7 +132,7 @@ var createData = function(e){
 		}
 	}
 	
-	addItem(data,data.type);
+	createTmp(data,data.type);
 	e.preventDefault();
 }
 
@@ -120,6 +140,12 @@ var createData = function(e){
 var clearSrc = function(){
 	$canvas[0].innerHTML = '';
 	$canvas[0].style.display = 'none';
+}
+
+//履歴もクリア  
+var clearData = function(){
+	clearSrc();
+	removeData('cfm@defHtml');
 }
 
 window.onload = function(){
@@ -130,6 +156,7 @@ window.onload = function(){
 	$form = document.getElementById('form');
 	$submitBtn = document.getElementById('submit');
 	$clearBtn = document.getElementById('clear');
+	$clearDataBtn = document.getElementById('clearData');
 	$('.addBtn').live('click',function(e){
 		addElem(e,this);
 	});
@@ -142,4 +169,7 @@ window.onload = function(){
 	$form.addEventListener('submit',createData,false);
 	
 	$clearBtn.addEventListener('click',clearSrc,false);
+	$clearDataBtn.addEventListener('click',clearData,false);
+	
+	if(html = getData('cfm@defHtml')) addItem(html);
 }

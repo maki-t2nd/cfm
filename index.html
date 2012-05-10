@@ -208,7 +208,7 @@ body {
 			</div>
 		</div>
 </script>
-<script id="image2Form" type="text/x-template">
+<script id="imageGroupForm" type="text/x-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -291,7 +291,9 @@ body {
 	<th>{#title}</th>
 	<td>
 		<input type="text" name="{#name}" value="{{#name}}" />
-		<input type="hidden" name="field[]" value="{#name}" />
+		<input type="hidden" name="field[]" value="{#name}" /><!-- BEGIN required:veil -->
+		<input type="hidden" name="{#name}:validator#required" /><!-- BEGIN {#name}:validator#required -->
+		<p>{#title}は必須要素です。</p><!-- END {#name}:validator#required --><!-- END required:veil -->
 	</td>
 </tr>
 </script>
@@ -353,7 +355,49 @@ body {
 		</td>
 	</tr>
 </script>
-<script id="image2" type="text/x-template"><table class="js-fieldgroup-sortable">
+<script id="group" type="text/x-template">
+<table class="js-fieldgroup-sortable">
+	<thead>
+	<tr>
+		<th colspan="3">{#title}</th>
+	</tr>
+	</thead>
+	<!-- BEGIN {#group}:loop -->
+	<tr class="sortable-item">
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
+		<td>
+			<ul><!-- BEGIN text:tmpLoop -->
+				<li>
+					<input type="text" name="{#name}[{i}]" value="{{#name}}" />
+				</li><!-- END text:tmpLoop --><!-- BEGIN select:tmpLoop -->
+				<li>
+					<select name="">
+						<option value=""></option><!-- BEGIN option:loop -->
+						<option value=""></option><!-- END option:loop -->
+					</select>
+				</li><!-- END select:tmpLoop -->
+			</ul>
+		</td>
+		<td><input type="button" class="item-delete" value="削除" /></td>
+	</tr>
+	<!-- END {#group}:loop -->
+	<tr class="sortable-item item-template">
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
+		<td>
+			
+		</td>
+		<td><input type="button" class="item-delete" value="削除" /></td>
+	</tr>
+	<tfoot>
+	<tr>
+		<td colspan="3"><input type="button" class="item-insert" value="追加" /></td>
+	</tr>
+	</tfoot>
+</table>
+<input type="hidden" name="field[]" value="{#name}" />
+<input type="hidden" name="field[]" value="@{#group}" />
+</script>
+<script id="imageGroup" type="text/x-template"><table class="js-fieldgroup-sortable">
 	<thead>
 	<tr>
 		<th colspan="3">{#title}</th>
@@ -443,7 +487,7 @@ body {
 					<option value="checkbox">チェックボックス</option>
 					<option value="textarea">テキストエリア</option>
 					<option value="image">画像</option>
-					<option value="image2">画像グループ</option>
+					<option value="imageGroup">画像グループ</option>
 				</select>
 			</div>
 		</div>
@@ -454,6 +498,7 @@ body {
 			<div class="controls">
 				<input type="submit" id="submit" value="生成" class="btn btn-primary" />
 				<input type="reset" id="clear" value="クリア" class="btn" />
+				<input type="reset" id="clearData" value="履歴クリア" class="btn btn-danger" />
 			</div>
 		</div>
 	</form>
