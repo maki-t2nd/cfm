@@ -15,12 +15,17 @@ body {
 	display: none;
 }
 
+#srcBtn,
+#groupBtn {
+	display: none;
+}
+
 .controls-inner {
 	margin-bottom: 10px;
 }
 
 </style>
-<script id="textForm" type="text/x-template">
+<script id="textForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -34,7 +39,7 @@ body {
 			</div>
 		</div>
 </script>
-<script id="selectForm" type="text/x-template">
+<script id="selectForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -64,7 +69,7 @@ body {
 			
 		</div>
 </script>
-<script id="radioForm" type="text/x-template">
+<script id="radioForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -93,7 +98,7 @@ body {
 			</div>
 		</div>
 </script>
-<script id="checkboxForm" type="text/x-template">
+<script id="checkboxForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -122,7 +127,7 @@ body {
 			</div>
 		</div>
 </script>
-<script id="textareaForm" type="text/x-template">
+<script id="textareaForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -136,7 +141,7 @@ body {
 			</div>
 		</div>
 </script>
-<script id="imageForm" type="text/x-template">
+<script id="imageForm" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -208,7 +213,37 @@ body {
 			</div>
 		</div>
 </script>
-<script id="imageGroupForm" type="text/x-template">
+<script id="groupForm" type="text/cfm-template">
+		<div class="control-group">
+			<label class="control-label">groupタイトル</label>
+			<div class="controls">
+				<input type="text" name="groupTitle" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">group名</label>
+			<div class="controls">
+				<input type="text" name="group" class="span2" />
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">要素追加</label>
+			<div class="controls">
+				<div class="control-inner">
+					<select id="addType" name="addType" class="span2">
+						<option value=""></option>
+						<option value="text">テキスト</option>
+						<option value="select">セレクト</option>
+						<option value="radio">ラジオ</option>
+						<option value="textarea">テキストエリア</option>
+						<option value="image">画像</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div id="addTmp"></div>
+</script>
+<script id="imageGroup2Form" type="text/cfm-template">
 		<div class="control-group">
 			<label class="control-label">タイトル</label>
 			<div class="controls">
@@ -287,17 +322,15 @@ body {
 			</div>
 		</div>
 </script>
-<script id="text" type="text/x-template"><tr>
+<script id="text" type="text/cfm-template"><tr>
 	<th>{#title}</th>
 	<td>
 		<input type="text" name="{#name}" value="{{#name}}" />
-		<input type="hidden" name="field[]" value="{#name}" /><!-- BEGIN required:veil -->
-		<input type="hidden" name="{#name}:validator#required" /><!-- BEGIN {#name}:validator#required -->
-		<p>{#title}は必須要素です。</p><!-- END {#name}:validator#required --><!-- END required:veil -->
+		<input type="hidden" name="field[]" value="{#name}" />
 	</td>
 </tr>
 </script>
-<script id="select" type="text/x-template"><tr>
+<script id="select" type="text/cfm-template"><tr>
 	<th>{#title}</th>
 	<td>
 		<select name="{#name}">
@@ -308,7 +341,7 @@ body {
 	</td>
 </tr>
 </script>
-<script id="radio" type="text/x-template"><tr>
+<script id="radio" type="text/cfm-template"><tr>
 	<th>{#title}</th>
 	<td><!-- BEGIN radio:loop -->
 		<label for="input-{#name}-{#radio_value}"><input type="radio" name="{#name}" value="{#radio_value}" id="input-{#name}-{#radio_value}"{{#name}:checked#{#radio_value}} />{#radio_label}</label><!-- END radio:loop -->
@@ -316,15 +349,15 @@ body {
 	</td>
 </tr>
 </script>
-<script id="checkbox" type="text/x-template"><tr>
+<script id="checkbox" type="text/cfm-template"><tr>
 	<th>{#title}</th>
 	<td><!-- BEGIN checkbox:loop -->
-		<label for="input-{#name}-{#radio_value}"><input type="checkbox" name="{#name}[]" value="{#checkbox_value}" id="input-{#name}-{#checkbox_value}"{{#name}:checked#{#checkbox_value}} />{#checkbox_label}</label><!-- END checkbox:loop -->
+		<label for="input-{#name}-{#checkbox_value}"><input type="checkbox" name="{#name}[]" value="{#checkbox_value}" id="input-{#name}-{#checkbox_value}"{{#name}:checked#{#checkbox_value}} />{#checkbox_label}</label><!-- END checkbox:loop -->
 		<input type="hidden" name="field[]" value="{#name}" />
 	</td>
 </tr>
 </script>
-<script id="textarea" type="text/x-template"><tr>
+<script id="textarea" type="text/cfm-template"><tr>
 	<th>{#title}</th>
 	<td>
 		<textarea name="{#name}">{{#name}}</textarea>
@@ -332,16 +365,16 @@ body {
 	</td>
 </tr>
 </script>
-<script id="image" type="text/x-template">
+<script id="image" type="text/cfm-template">
 	<tr>
 		<th>{#title}</th>
 		<td>
 			<!-- BEGIN {#name}@path:veil -->
-				<img src="%{ARCHIVES_DIR}{{#name}@path}" />
-				<input type="hidden" name="{#name}@old" value="{{#name}@path}" /><br />
-				<label>
-					<input type="checkbox" name="{#name}@edit" value="delete" />削除
-				</label>
+			<img src="%{ARCHIVES_DIR}{{#name}@path}" />
+			<input type="hidden" name="{#name}@old" value="{{#name}@path}" /><br />
+			<label>
+				<input type="checkbox" name="{#name}@edit" value="delete" />削除
+			</label>
 			<!-- END {#name}@path:veil -->
 			<input type="file" name="{#name}" size="20" /><!-- BEGIN alt:veil --><br />
 			代替テキスト:<input type="text" name="{#name}@alt" value="{{#name}@alt}" size="40" /><!-- END alt:veil -->
@@ -355,49 +388,82 @@ body {
 		</td>
 	</tr>
 </script>
-<script id="group" type="text/x-template">
+<script id="group" type="text/cfm-template"><h2>{#groupTitle}</h2>
 <table class="js-fieldgroup-sortable">
-	<thead>
 	<tr>
-		<th colspan="3">{#title}</th>
+		<td><input type="button" class="item-insert" value="追加" /></td><!-- BEGIN title:loop -->
+		<th>{#title}</th><!-- END title:loop -->
+		<td>削除</td>
 	</tr>
-	</thead>
 	<!-- BEGIN {#group}:loop -->
 	<tr class="sortable-item">
-		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
-		<td>
-			<ul><!-- BEGIN text:tmpLoop -->
-				<li>
-					<input type="text" name="{#name}[{i}]" value="{{#name}}" />
-				</li><!-- END text:tmpLoop --><!-- BEGIN select:tmpLoop -->
-				<li>
-					<select name="">
-						<option value=""></option><!-- BEGIN option:loop -->
-						<option value=""></option><!-- END option:loop -->
-					</select>
-				</li><!-- END select:tmpLoop -->
-			</ul>
-		</td>
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>{#loopField}
 		<td><input type="button" class="item-delete" value="削除" /></td>
 	</tr>
 	<!-- END {#group}:loop -->
 	<tr class="sortable-item item-template">
-		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
-		<td>
-			
-		</td>
+		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>{#tmpField}
 		<td><input type="button" class="item-delete" value="削除" /></td>
 	</tr>
-	<tfoot>
-	<tr>
-		<td colspan="3"><input type="button" class="item-insert" value="追加" /></td>
-	</tr>
-	</tfoot>
-</table>
-<input type="hidden" name="field[]" value="{#name}" />
+</table>{#varTmp}<!-- BEGIN name:loop -->
+<input type="hidden" name="field[]" value="{#name}" /><!-- END name:loop -->
 <input type="hidden" name="field[]" value="@{#group}" />
 </script>
-<script id="imageGroup" type="text/x-template"><table class="js-fieldgroup-sortable">
+<script id="textGroup" type="text/cfm-template">
+		<td>
+			<input type="text" name="{#name}[{i}]" value="{{#name}}" />
+		</td><!-- BEGIN var:tmp -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}" /><!-- END var:tmp --></script>
+<script id="selectGroup" type="text/cfm-template">
+		<td>
+			<select name="{#name}[{i}]">
+				<option value=""></option><!-- BEGIN option:loop -->
+				<option value="{#option_value}"{{#name}:selected#{#option_value}}>{#option_label}</option><!-- END option:loop -->
+			</select>
+		</td><!-- BEGIN var:tmp -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}" /><!-- END var:tmp --></script>
+<script id="radioGroup" type="text/cfm-template">
+		<td><!-- BEGIN radio:loop -->
+			<label for="input-{#name}[{i}]-{#radio_value}"><input type="radio" name="{#name}[{i}]" value="{#radio_value}" id="input-{#name}[{i}]-{#radio_value}"{{#name}:checked#{#radio_value}} />{#radio_label}</label><!-- END radio:loop -->
+		</td><!-- BEGIN var:tmp -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}" /><!-- END var:tmp --></script>
+<script id="textareaGroup" type="text/cfm-template">
+		<td>
+			<textarea name="{#name}[{i}]">{{#name}}</textarea>
+		</td><!-- BEGIN var:tmp -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}" /><!-- END var:tmp --></script>
+<script id="imageGroup" type="text/cfm-template">
+		<td><!-- BEGIN {#name}:veil -->
+			<img src="%{ARCHIVES_DIR}{{#name}@path}" />
+			<label><input type="checkbox" name="{#name}@edit[{i}]" value="delete" /> 削除</label>
+			<input type="hidden" name="{#name}@old[{i}]" value="{{#name}@path}" /><!-- END {#name}:veil -->
+			<input type="file" name="{#name}[{i}]" /><!-- BEGIN alt:veil --><br />
+			代替テキスト:<input type="text" name="{#name}@alt[{i}]" value="{{#name}@alt}" size="40" /><!-- END alt:veil --><!-- BEGIN direction:veil -->
+			<input type="hidden" name="{#name}@{#direction}[{i}]" value="{#size}" /><!-- END direction:veil --><!-- BEGIN tiny:veil -->
+			<input type="hidden" name="{#name}@tiny{#tiny}[{i}]" value="{#tinySize}" /><!-- END tiny:veil --><!-- BEGIN large:veil -->
+			<input type="hidden" name="{#name}@large{#large}[{i}]" value="{#largeSize}" /><!-- END large:veil --><!-- BEGIN square:veil -->
+			<input type="hidden" name="{#name}@square{#square}[{i}]" value="{#squareSize}" /><!-- END square:veil -->
+		</td><!-- BEGIN var:tmp -->
+<input type="hidden" name="{#name}:extension" value="image" /><!-- BEGIN square:veil -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}@squarePath" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@squareAlt" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@squareX" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@squareY" /><!-- END square:veil --><!-- BEGIN large:veil -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}@largePath" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@largeAlt" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@largeX" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@largeY" /><!-- END large:veil --><!-- BEGIN tiny:veil -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}@tinyPath" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@tinyAlt" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@tinyX" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@tinyY" /><!-- END tiny:veil --><!-- BEGIN alt:veil -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}@alt" /><!-- END alt:veil -->
+<input type="hidden" name="@\{#group\}[]" value="{#name}@path" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@x" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@y" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@edit" />
+<input type="hidden" name="@\{#group\}[]" value="{#name}@old" /><!-- END var:tmp --></script>
+<script id="imageGroup2" type="text/cfm-template"><table class="js-fieldgroup-sortable">
 	<thead>
 	<tr>
 		<th colspan="3">{#title}</th>
@@ -406,12 +472,10 @@ body {
 	<!-- BEGIN {#group}:loop -->
 	<tr class="sortable-item">
 		<td class="item-handle"><img width="17" height="17" class="arrowHandle" src="/images/admin_arrow_vertical.gif" /></td>
-		<td>
-			<!-- BEGIN {#name}:veil -->
-			<img src="%{ARCHIVES_DIR}{{#name}@path}" width="170" />
+		<td><!-- BEGIN {#name}:veil -->
+			<img src="%{ARCHIVES_DIR}{{#name}@path}" /><!-- END {#name}:veil -->
 			<label><input type="checkbox" name="{#name}@edit[{i}]" value="delete" /> 削除</label>
 			<input type="hidden" name="{#name}@old[{i}]" value="{{#name}@path}" /> 
-			<!-- END {#name}:veil -->
 			<input type="file" name="{#name}[{i}]" /><!-- BEGIN alt:veil --><br />
 			代替テキスト:<input type="text" name="{#name}@alt[{i}]" value="{{#name}@alt}" size="40" /><!-- END alt:veil --><!-- BEGIN direction:veil -->
 			<input type="hidden" name="{#name}@{#direction}[{i}]" value="{#size}" /><!-- END direction:veil --><!-- BEGIN tiny:veil -->
@@ -487,18 +551,26 @@ body {
 					<option value="checkbox">チェックボックス</option>
 					<option value="textarea">テキストエリア</option>
 					<option value="image">画像</option>
-					<option value="imageGroup">画像グループ</option>
+					<option value="group">グループ</option>
+					<option value="imageGroup2">画像グループ</option>
 				</select>
 			</div>
 		</div>
 		
 		<div id="formTmp"></div>
 		
-		<div class="control-group">
+		<div id="srcBtn" class="control-group">
 			<div class="controls">
 				<input type="submit" id="submit" value="生成" class="btn btn-primary" />
 				<input type="reset" id="clear" value="クリア" class="btn" />
 				<input type="reset" id="clearData" value="履歴クリア" class="btn btn-danger" />
+			</div>
+		</div>
+		<div id="groupBtn" class="control-group">
+			<div class="controls">
+				<input type="button" id="groupCreate" value="グループ生成" class="btn btn-primary" />
+				<input type="button" id="push" value="追加" class="btn btn-info" />
+				<input type="button" id="groupClear" value="グループ履歴クリア" class="btn btn-danger" />
 			</div>
 		</div>
 	</form>
@@ -507,7 +579,7 @@ body {
 		<pre class="prettyprint lang-html linenums"></pre>
 	</div>
 </div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="google-code-prettify/prettify.js"></script>
 <script src="js/customFieldMaker.js"></script>
