@@ -250,13 +250,14 @@ window.onload = function(){
 	$srcBtn = document.getElementById('srcBtn');
 	$groupBtn = document.getElementById('groupBtn');
 	
-	$('.addBtn').live('click',function(e){
-		addElem(e,this);
-	});
-	
-	$('.delBtn').live('click',function(e){
-		delElem(e,this);
-	});
+	document.addEventListener('click',function(e){
+		var $target = e.target;
+		if($target.className.indexOf('addBtn') > -1){
+			addElem(e,$target);
+		}else if($target.className.indexOf('delBtn') > -1){
+			delElem(e,$target);
+		}
+	},false);
 	
 	$type.addEventListener('change',addForm,false);
 	$form.addEventListener('submit',createSrc,false);
